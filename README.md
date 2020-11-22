@@ -1,3 +1,2 @@
-# DataStructures
-
-All Data Structures programs and problems written by me!!!
+# CrackingTheCodingInterview
+This project has solution to the problems of Cracking the Coding Interview Book
