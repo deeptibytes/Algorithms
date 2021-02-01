@@ -1,4 +1,4 @@
-package trees;
+cpackage trees;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -33,10 +33,11 @@ public class TreeProbs {
 	 * CReate list linkedlist of nodes at each level : First Way
 	 */
 	
-	public  void getListAtDepth(Node root){
+	public  ArrayList<LinkedList<Node>>  getListAtDepth(Node root){
 		
 		ArrayList<LinkedList<Node>> result = new ArrayList<LinkedList<Node>>();
 		getListAtDepth(root, result, 0);
+		return result
 		
 		
 	}
@@ -47,10 +48,10 @@ public class TreeProbs {
 	    	    return;
 	      }
 	      LinkedList<Node> levelList = null;
-	      if(result.size() == level) {
+	      if(result.size() == level) {//we are going down to left side first time 
 	    	    levelList = new LinkedList<Node>();
 	    	    result.add(levelList);
-	      }else {
+	      }else {//now we are going up in recursion call
 	    	    levelList =  result.get(level);   	     
 	      }
 	      levelList.add(root);
@@ -307,7 +308,7 @@ Node1 getLCM1(Node1 root, Node1 one, Node1 two) {
 	   
    }
    
-  private int getRank(Node2 node, int x) {
+  private int getRank(Node2 node, int x) {//rank means how many nums are smaller than the given number
     	 
 	 if(x== node.data) return node.leftCount;
 	 
@@ -327,7 +328,7 @@ Node1 getLCM1(Node1 root, Node1 one, Node1 two) {
 		 
 		 int letNodeCount = getRank(node.right, x);
 				 
-		return leftSubTreesize + letNodeCount + 1;
+		return leftSubTreesize + letNodeCount + 1;//i is for adding root
 	 }
   
 } 
@@ -415,14 +416,16 @@ Node1 getLCM1(Node1 root, Node1 one, Node1 two) {
  /*
   * How many paths in binary search tree sums to given sum 
   * https://www.geeksforgeeks.org/print-k-sum-paths-binary-tree/
+  * Path may or may not include the root element. So first check if path is there with root or not. Then check paths in left subtree and then right subtree
   */
  
 private int countPaths(Node root, int target) {
 	 
 	 if(root == null)return 0;
 	 
-	Path path = new Path(); //if you want to preserve a variable in recursive calls, go with objects and pass them as params. Do not return objects if possible
-	countPathsFromNode(root, target, 0, path   );
+	Path path = new Path(); //if you want to preserve a variable in recursive calls, go with objects and pass them as params. Do not return objects if possible. 
+	//If you use primitives in recursive calls, you must return it to get the most updated value.  But in case of objects, they dont need to be returned
+	countPathsFromNode(root, target, 0, path   );//this will check paths from root node
 	
 	int pathsLeft = countPaths(root.left, target);
 	int pathsRight = countPaths(root.right, target);
@@ -448,7 +451,8 @@ private int countPaths(Node root, int target) {
   private void countPathsFromNode(Node root, int target, int currentSum, Path path) {
 		 
 		  // This is modification of pre-order traversal
-		  
+		 //currentSu var is being used in recursive call. It isok because we dont need this var outside this method. 
+		 //We need path outside of this method so we must use object. 
 		 
 		 if(root == null) return;
 		 currentSum = currentSum + root.data;
@@ -497,70 +501,205 @@ private int countPaths(Node root, int target) {
 	  
 	  
   }
+  
+//Create mirror tree  
+  public void createMirror(Node node){
+  if(node == null) return;
+  
+  Node Temp = node.left;
+  node.left = node.right;
+  node.right = Temp;
+  
+  createMirror(node.left);
+  createMirror(node.right);
+
+}
+
+
+/* Every node is sum of its two child nodes
+ */
+public boolean checkSumTree(Node node){
+  if(node == null) return true;
+  boolean isSum = false;
+  if(node.left == null && node.right == null) return true;
+  
+  else if(node.left !=null && node.right !=null){
+     isSum = (node.val ==node.left.val + node.right.val) ? true: false;
+  }else if(node.left != null) {
+       isSum = (node.val ==node.left.val) ? true: false; 
+  }else{  
+      isSum = (node.val ==node.right.val) ? true: false; 
+  }
+  
+  return isSum && checkSumTree(node.left) && checkSumTree(node.right);
+  
+ /* Example of sum tree    
+  * TreeNode node = new TreeNode(20);
+        node.left = new TreeNode(8);
+        node.right = new TreeNode(12);
+        node.left.left = new TreeNode(3);
+        node.left.right = new TreeNode(5);
+        node.right.left = new TreeNode(3);
+        node.right.right = new TreeNode(9);*/
+ 
+ 
+}
+
+
+
+/*
+     Given a tree and a sum, 
+     return true if there is a path
+     from the root down to a leaf,
+     such that adding up all
+     the values along the path 
+     equals the given sum. It is enforcing that path must have root
+ 
+     Strategy: subtract the node 
+     value from the sum when
+     recurring down, and check to 
+     see if the sum is 0 when
+     you run out of tree.
+     
+     12
+   8
+ 3
+     */
+ 
+    boolean hasPathSum(Node node, int sum)
+    {
+        if (node == null)
+            return sum == 0;//this is not sum =0!!
+            
+            boolean isFountLeft = hasPathSum(node.left, sum - node.data);//while recursing, passing sum - node.data
+            booelan isFoundRight = hasPathSum(node.right, sum - node.data);
+            
+            //if any of the boolean is true that means path is found.
+            
+            return isFountLeft || isFoundRight;
+    }
+ 
+  
+ //Serialize/Deserialize Binary tree
+
+public String serialize(TreeNode root, String str){//it will convert BT into String in preorder traversal order
+
+//since String is object type, we can use that in multiple recursive call retaining the value
+ if(root == null){
+   str = str + "X" + ",";
+ } else{///notice here keeping this in else part is necessary because we are not returning anything in base case. 
+ //If we are returning any thing in base case, no need to use else because after return no code is executed.
+ //But if not returning, then else should be used
+
+	 str = str + root.val + ",";
+	 str = serialize(root.left, str);//imp to return here. if method is returning anything, recursive call should also return something
+	 //when we do oreorder traversal, retrun type is void so we dont need return anything in recursive call. 
+	 //But here method return type is String so we should return
+	 str = serialize(root.right, str);
+ }	 
+ return str;
+}
+
+public String serialize(TreeNode root){//it will convert BT into String in pre order traversal order
+
+ String str= new String("");
+ return serialize(root, str);
+}
+
+public TreeNode deserialize(String str){//this will convert String into binary Tree
+
+	//convert String into String array
+	String[] strArray = str.split(",");
+	List list = new LinkedList<String>(Arrays.asList(strArray) );
+	return populateTree(list);
+}
+
+public TreeNode populateTree(List list){
+
+ 	    if(list.get(0).equals("X") ){//we can also do list.poll() because it is Linkedlist
+ 	      list.remove(0);
+ 	      return null;//base case
+		
+ 	    }//what is put below part in else?? dont do that. It will cause trouble because in that case when you return root, it will not
+ 	    //compile because root is defined in else block. Remember if base case is returning something, no need to use else!!!
+ 	    
+ 	      TreeNode root = new TreeNode(Integer.parseInt((String)list.get(0)));
+		  list.remove(0);
+		  root.left =  populateTree(list);
+		  root.right = populateTree(list);
+		  return root;
+          
+   }
+
+ 
+  
+/*
+ * //ZigZag level order traversal 
+ * 
+ * Testing code
+ *     TreeNode node = new TreeNode(20);
+        node.left = new TreeNode(8);
+        node.right = new TreeNode(12);
+        node.left.left = new TreeNode(3);
+        node.left.right = new TreeNode(5);
+        node.right.left = new TreeNode(6);
+        node.right.right = new TreeNode(9);
+        
+      Trees obj = new Trees();
+      
+     List<LinkedList<TreeNode>> list = obj.zigZakTraversal(node);
+     
+     for(LinkedList<TreeNode> llist : list){
+       System.out.println("printing level ");
+        for ( TreeNode nodec:llist){
+          System.out.println(nodec.val);
+        
+        }
+ */
+	
+public List<LinkedList<TreeNode>> zigZakTraversal(TreeNode root){
+
+	int height = getMaxTreeHeight(root);
+	List<LinkedList<TreeNode>> finalList = new ArrayList<LinkedList<TreeNode>>();
+	zigZakTraversal(root, finalList, 0, height);	
+	return finalList;
+}
+
+public void zigZakTraversal(TreeNode root, List<LinkedList<TreeNode>> finalList, int level, int height){
+
+  if(level >= height) return;//level and height cant be same. If height is 3, maxLavel will be 2
+  
+  if(finalList.size() == level){//mens list does not exist yet for that level
+     LinkedList<TreeNode> list = new LinkedList<TreeNode>();
+     list.add(root);
+     finalList.add(list);  
+  }else{
+      LinkedList<TreeNode> list = finalList.get(level);
+      if(level % 2 == 0){  //level is even, add node at head
+        list.push(root);//add at front
+     
+      }else{//level is odd, add node at tail
+         list.add(root);//add at end
+      
+      }
+  }
+  
+  zigZakTraversal(root.left, finalList, level + 1, height);
+  zigZakTraversal(root.right, finalList, level + 1, height);
+
+
+}
+
+  
+  
+  
+  
      
 	public static void main(String[] args) {
 		
 		TreeProbs obj = new TreeProbs();
 		
 		
-		obj.arrangeHanoi(3
-				
-				, "A" , "B", "C");
-		
-		int[] arr = new int[] {3, 6, 8, 9, 11};
-		
-		 /*BinarySearchTree  bst = new  BinarySearchTree();
-	        bst.root = new Node(20); 
-	        bst.root.left = new Node(10); //45
-	        bst.root.right = new Node(30);
-	        bst.root.left.left = new Node(40);//40
-	        bst.root.left.right = new Node(47);
-	        bst.root.right.left = new Node(25);
-	        bst.root.right.right = new Node(40); */
-		
-		/*Node root = new Node(5);
-		root.left = new Node(6);
-		root.right = new Node(7);
-		root.right.left = new Node(3);
-		
-		Node root1 = new Node(7);
-		root1.right = new Node(3);
-		
-		System.out.println(obj.checkSubTreeCompare(root, root1));*/
-		
-		Node2 root2 = null;
-		/*
-		root2 = obj.createDSFromStream(root2, 20);
-		root2 = obj.createDSFromStream(root2, 15);
-		root2 = obj.createDSFromStream(root2, 10);
-		root2 = obj.createDSFromStream(root2, 5);
-		root2 = obj.createDSFromStream(root2, 25);
-		root2 = obj.createDSFromStream(root2, 23);
-		root2 = obj.createDSFromStream(root2, 24);
-		root2 = obj.createDSFromStream(root2, 13);
-		
-		
-		obj.inOrderTraversal(root2);
-		
-		System.out.println("Rank of 24 " + obj.getRank(root2, 24));*/
-		
-		/*
-		 * sum paths
-		 */
-		 Node root = new Node(1);    
-		    root.left = new Node(3);  
-		    root.left.left = new Node(2);  
-		    root.left.right = new Node(1);  
-		    root.left.right.left = new Node(1);  
-		    root.right = new Node(-1);  
-		    root.right.left = new Node(4);  
-		    root.right.left.left = new Node(1);  
-		    root.right.left.right = new Node(2);  
-		    root.right.right = new Node(5);  
-		    root.right.right.right = new Node(2); 
-		    
-		  //  System.out.println("Path sum "+ obj.countPaths(root, 5));
-		    //obj.test();
 		
 		
 	}

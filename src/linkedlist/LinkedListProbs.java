@@ -121,7 +121,7 @@ public class LinkedListProbs {
 		
 	}*/
 	
-	//Return kth node value. 
+	//Return kth node value. Recursion
 	
 	/*public class Index{
 		
@@ -435,7 +435,7 @@ public class LinkedListProbs {
 	   return isEqual(head, reverseHead);   
    }
    
-   //using iteration
+   //using iteration. This is not in place. Do inPlace reverse by just changing mapping
    private Node reverseList(Node node) { 
 	   Node head = null;
 	   while(node != null) {
@@ -695,7 +695,7 @@ public class LinkedListProbs {
 	 * Detect if Linkedlist has a loop without using additional DS. return node where loop starts
 	 */
 	
-	private Node getLoopNode(Node head) {  //4 1  6 12 14 15  16 (15 points to 6
+	private Node getLoopNode(Node head) {  //4 1  6 12 14 15  16 (16 points to 6
 		
 		Node slow = head;
 		Node fast = head;
@@ -725,6 +725,267 @@ public class LinkedListProbs {
 		
 		
 	}
+	
+	 public ListNode removeDups(ListNode head){
+	//5 5 6 2 6 2
+		ListNode dummy = new ListNode(-1);
+		dummy.next = head;
+		 print(head);
+		
+		ListNode pre = dummy;
+		Set<Integer> set = new HashSet<Integer>();
+		
+		while(head !=null){
+		 
+		 if(set.contains(head.val)){
+		   pre.next = head.next;
+		 
+		 }else{
+		   set.add(head.val);
+		   pre = head;
+		 }
+		 
+		 head = head.next;
+	
+	
+	}
+	   print(dummy.next);
+	   return dummy.next;
+	
+	
+	}
+	
+	
+	public ListNode removeDupsInPlace(ListNode head){
+	 
+	 print(head);
+	 ListNode node = null;;
+	 ListNode first = head;
+	 ListNode previous = null;
+	 
+	 //5  6  6 2
+	 while(first !=null){
+	    node = first.next;
+	    previous = first;
+	    while(node !=null){
+	      
+	      if(first.val == node.val){
+	      
+	        previous.next = node.next;
+	      
+	      }else{
+	      
+	        previous = node;
+	      }
+	      
+	      node = node.next;	    
+	    }
+	    
+	    first = first.next;	 
+	 
+	 }
+	 
+	 print(head);
+	 return head;
+	 	
+	}
+	
+	
+	
+	public ListNode removeKth(ListNode head, int k){
+	
+	print(head);
+	ListNode slow = head;
+	ListNode dummy = new ListNode(-1);
+	dummy.next = head;
+	
+	ListNode previous = dummy;
+	
+	ListNode fast = head;
+	
+	while(fast !=null && k > 1){
+	  fast = fast.next;
+	  k--;	
+	}
+	
+	while(fast.next !=null){
+	  fast = fast.next;
+	  slow = slow.next;
+	  previous = previous.next;
+	
+	}
+	
+	previous.next = slow.next;
+
+	print(head);
+	return dummy.next;
+	
+	
+	}
+	
+	public boolean removeMiddle(ListNode node){
+	
+	ListNode pre = null;
+	if(node == null) return false;
+	while(node.next !=null){
+	    
+	    node.val = node.next.val;
+	    pre = node;
+	    node = node.next;
+
+	}
+	
+	   pre.next = null;
+	   return true;
+}
+	
+	void sortList() 
+    { 
+       // initialise count of 0 1 and 2 as 0 
+       int count[] = {0, 0, 0};  
+         
+       Node ptr = head; 
+         
+       /* count total number of '0', '1' and '2' 
+        * count[0] will store total number of '0's 
+        * count[1] will store total number of '1's 
+        * count[2] will store total number of '2's  */
+       while (ptr != null)  
+       { 
+            count[ptr.data]++; 
+            ptr = ptr.next; 
+       } 
+  
+       int i = 0; 
+       ptr = head; 
+  
+       /* Let say count[0] = n1, count[1] = n2 and count[2] = n3 
+        * now start traversing list from head node, 
+        * 1) fill the list with 0, till n1 > 0 
+        * 2) fill the list with 1, till n2 > 0 
+        * 3) fill the list with 2, till n3 > 0  */
+        while (ptr != null)  
+        { 
+            if (count[i] == 0) 
+                i++; 
+            else 
+            { 
+               ptr.data= i; 
+               --count[i]; 
+               ptr = ptr.next; 
+            } 
+         } 
+    } 
+    
+    
+    ///Efficiently merge K sorted linked lists
+    
+    public ListNode mergeKLists(ListNode[] lists){ //O(NlogK)
+    
+        
+         if(lists.length < 1){
+             return null;
+         }
+    
+          //Define comparater
+    Comparator<ListNode> comp = new Comparator<ListNode>()//pass the method in constructor
+    {
+        
+          @Override
+     public int compare(ListNode n1, ListNode n2){
+      if(n1.val > n2.val) return 1;
+      if(n1.val < n2.val) return -1;
+      return 0;
+      
+      //we can also do n1.data.compareTo(n2.data);
+    }
+    
+    };
+        
+    //Create PQ  (min Heap)  
+    Queue<ListNode> pQ = new PriorityQueue<ListNode>(comp);
+   
+    //Populate pQ with all elements of passed lists
+
+    for(ListNode node: lists){
+            pQ.offer(node);
+    }
+  
+    ListNode dummy = new ListNode(-1);
+    ListNode runner = dummy;
+    
+    
+    while(! pQ.isEmpty()){
+      ListNode node = pQ.poll();
+      runner.next = node;
+      runner = runner.next;
+    if(node.next!=null) pQ.offer(node.next); //null check is imp here
+         
+    }//while
+    
+    return dummy.next;
+    
+    
+    
+    
+    
+    }//method
+    
+   
+    
+    //Copy a Linked List with Random Pointers
+  
+  public ListNode copyList(ListNode head){
+  
+    ListNode dummy  = new ListNode(-1);
+    ListNode dummyP =   dummy;;
+    ListNode runner = head;
+    
+    //Stich new node nodes next to original nodes
+    while(runner !=null ){
+    
+	    ListNode newNode = new ListNode(runner.val);	   
+	    newNode.next = runner.next;  
+	    runner.next = newNode; 
+	    runner = runner.next.next;
+    }
+    
+    runner = head;
+    
+    //copy random pointer and create new nodes
+     while(runner !=null ){
+     
+       ListNode random = runner.random;
+       runner.next.random = random;
+       dummyP.next = runner.next;
+       
+       dummyP = dummyP.next;
+       runner = runner.next.next;     
+    }
+    
+ 
+    return dummy.next;
+    
+    /*Test Code
+     * ListNode head1 = new ListNode(7); head1.random = null;
+		head1.next =  new ListNode(8); head1.next.random = head1;
+		head1.next.next =  new ListNode(12); head1.next.next.random = head1.next;
+		
+		ListNode copy = obj.copyList(head1);
+		
+		while(copy!=null){
+		
+	    System.out.println(copy.val +"---" );
+	    int random = copy.random ==null ? -1 : copy.random.val;
+	    System.out.println(random );
+	    copy = copy.next;
+	
+	    }
+     */
+  
+  }
+                       
+  
 	
 	
 	public static void main(String[] args) {

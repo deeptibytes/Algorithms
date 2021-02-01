@@ -84,6 +84,48 @@ public class Sorting {
 	   Arrays.sort(strArr, new AnagramComparator());
    }
    
+ 
+ 
+ /*
+  * Get anagrams
+  */
+public String[] getAnagrams(String[] arr){
+
+Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+ArrayList<String> list = null;
+
+for(String x: arr){
+
+  char[] xy = x.toCharArray();
+  Arrays.sort(xy);
+  String sorted = new String(xy);
+
+ if( map.containsKey(sorted) ){
+     list = map.get(sorted); //we can also do map.get().add(sorted);
+     list.add(x);   
+ }else{
+    list = new ArrayList<String>();
+    list.add(x);
+    map.put(sorted, list);    
+ }  
+}
+
+int k = 0;
+
+for(String key: map.keySet()){
+
+    list = map.get(key);
+    Collections.sort(list);
+    
+    for(String y : list){
+     arr[k++] = y;    
+    }
+    
+}
+ return arr;
+
+}
+   
    
    /*
     * Check if sorted array is rotated.
@@ -273,6 +315,7 @@ public class Sorting {
 	   if(   str.compareTo(arr[mid]) == 0  ) return mid;
 	   else if(  str.compareTo(arr[mid]) > 0    ) return binarySearchStrings(arr, str, mid +1, high);
 	   else return binarySearchStrings(arr, str, low, mid -1);//str.compareTo(arr[mid]) < 0
+	   //compareTo == postive value means str1 (cow) is lexicographically higher than str2 (goat)
    }
    
    
@@ -447,14 +490,205 @@ private int searchElement2(int[][] matrix, int key, int row, int col) {
 	//  System.out.println("After loop");
 	  printArrays(arr);
 	  System.out.println();
-	  
-	  
-	 
-	  
+	   
   }
+  
+   /*
+   * Count all distinct pairs with difference equal to k
+   */
+   
+   //https://www.geeksforgeeks.org/count-pairs-difference-equal-k/
+  
+  //If space is allowed 
+  int countDistinct(int[] arr, int target){
+  
+    //1. Arrays.sort(arr);
+    //2. Now remove duplicates
+    int count = 0;
+    
+    //3.
+     for(int i=0; i < arr.length ; i++){
+       int complimenet = Math.abs(arr[i] + target);
+       int index = binarySearch(arr, i+1, arr.length -1, complement);
+       if(index != -1) count++;       
+     }
+      return count;
+  }    
+    
+  }  
+  int binarySearch(int[] , int low, int high, int key){
+  
+    if (low> high) return -1;   
+    int mid = (low + high)/2;   
+    if(arr[mid] == key) return arr[mid];   
+    if(arr[mid] > key) return binarySearch(arr, 0, mid-1, key);   
+    return binarySearch(arr, mid + 1, high, key);
+  
+  }
+
    
    
+   
+
+
+/*
+ * Median of two sorted Arrays
+ * 3  5   7
+ * 1  2   8
+ * int[] arrA = {1, 5, 8};
+int[] arrB = {12, 15, 17};
+ * 
+ */
+  public double findMedian(int[] arrA, int[] arrB){  //O(N)
+ 
+ //Assuming array length is same
+ 
+ int len = arrA.length;
+ int mergedLen = len *2;//it will always be even number so median will be the average of (n-1)th and nth element of merged array 
+ int i = 0;
+ int j =0;
+ //int k = 0;
+ int counter = len + 1;//while loop should run len+1 times
+ double previous = 0;//this will be (n-1)th item
+ double nth = 0; //this will be nth item
+ 
+ //If each of the array has size 3 (n) then median of the merged array will be 3rd (nth)  and forth (n+1)th element
+ //array Index always starts at 0 so 
+ //nth element = element at (n-1) index
+ //(n+1)th element = element at n index
+ //
+ 
+ 
+ if( arrB[0] > arrA[len -1] ){ //if all elements of arrA are smaller than all elements of arrB. No need to run while loop
+   return (arrB[0] + arrA[len -1])/2;
+ }
+ 
+  if(   arrA[0] > arrB[len-1] ){ //if all elements of arrA are larger than all elements of arrB. No need to run while loop
+   return (arrA[0]  + arrB[len-1])/2;
+ }
+ 
+ 
+ while( i < len && j < len && counter >= 1){//this will run at least len times. len = length of one of the array. If two arrays have diff length, this will run at least 
+ //equal to one of the arrayLength. This is minimum. means any two arrays when merged, loop will atleast run len times. it can run more also but minumum is len
+ 
+  previous = nth;
+
+ if(arrA[i] < arrB[j]){
+   
+    nth = arrA[i++];
+
+ }else{
+  
+   nth = arrB[j++];
+ 
+ }
+
+ counter--; 
+ }
+ 
+ if( counter > 0){ //at this point, it is sure that k < len + 2 so we need to get only one more element and that will be nth element
+ //these are left over elements in arrA and arrB. Please note when we merge sorted array, before i ir j reaches to len
+ //it is sure that at least one of the aray elements are used . suppose we have two array with same length, one of the array will always 
+ //be used. If length is diff, then we cant conclude which one is used but it is sure that one of them will be used in merging whether it is smaller or longer
+ 
+ 
+   previous = nth;
+   
+   if( i < len){ //if arA has elements remaining
+    nth = arrA[i];
+   } 
+     
+    if( j < len){  //if arB has elements remaining
+     nth = arrB[j];   
+   }
+ 
+      
+ }
+ 
+  return (nth + previous)/2; 
+  
+ 
+ 
+ }
 		   
+ 
+ 
+ /*//Merge Overlapping Intervals
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+ 
+
+Example 1:
+
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+Example 2:
+
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+*Testing code/
+*
+*int[][] intervals ={ {1,3},{2,6},{8,10},{15,18}  };
+int[][] intervals ={ {1,4},{4,5}  };
+
+Stack<int[]> stack = obj.merge(intervals);
+
+while(!stack.empty()){
+ int[] x = stack.pop();
+ System.out.println(x[0] +","+ x[1]);
+}
+*/
+
+ public Stack<int[]> merge(int [][] intervals) {
+ 
+ //1. Sort the 2D array by start time
+		 sort(intervals, 0);
+		 
+		 Stack<int[]> stack = new Stack<int[]>();
+		 
+		 stack.push(intervals[0]);//it will be the lowest interval
+		 
+		 for(int i=1 ; i < intervals.length ; i++){
+		   //Modify stack value
+		   
+		   if(checkOverlap(stack.peek(), intervals[i])){ //peek is 1,3 and interval[i] is 1,6 so modified value will be 1, 6  
+		     int[] stackValue = stack.peek();//no need to pop and then modify, peek gives reference of value, we just need to modify that and it will modify the stack object
+		     stackValue[1] = intervals[i][1]; 
+		   }else{  
+		      stack.push(intervals[i]); 
+		 }
+		 
+		 }
+		   return stack;   
+}
+
+boolean checkOverlap(int[] arrA, int[] arrB){
+
+if(arrA[1] < arrB[1] && arrA[1] >= arrB[0]) return true;
+return false;
+
+
+}
+    
+  public void sort(int[][] arr, int col){
+    
+    Arrays.sort( arr, new Comparator<int[]>()  {
+    
+	    @Override
+	    public int compare(int[] arrA, int[] arrB){
+	    
+	    
+	    if(arrA[col] == arrB[col]) return 0;
+	    if(arrA[col] < arrB[col]) return -1;
+	    return 1;
+    }
+    
+    });
+    
+  }
  
 	
 	public static void main(String[] args) {

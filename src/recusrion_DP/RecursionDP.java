@@ -46,22 +46,23 @@ public class RecursionDP {
 	 * {1, 3, 5} = {subsetOf 1,3} ,     {add 5 in all subsets of 1,3}, 
 	 * 
 	 */
-	
-	public ArrayList<ArrayList<Integer>> getSubsets(ArrayList<Integer> set) {
+	 
+	 
+	 public ArrayList<ArrayList<Integer>> getSubsets(ArrayList<Integer> set) {
 		
 		ArrayList<ArrayList<Integer>> finalList = new ArrayList<ArrayList<Integer>>();		
-		return getSubsets(set, finalList);
+		return getSubsets(set, finalList, set.size()-1);//pass last index
 	}
 	
 	
 	
-    public ArrayList<ArrayList<Integer>> getSubsets(ArrayList<Integer> set, ArrayList<ArrayList<Integer>> preList) {
+    public ArrayList<ArrayList<Integer>> getSubsets(ArrayList<Integer> set, ArrayList<ArrayList<Integer>> preList, int index) {
 		
     	 //base case starts
     	/*
     	 * {1} = {}, {1}
     	 */
-    	if(set.size() == 1) {
+    	if(index == 0) {//if the size is one, index will be zero
     		ArrayList<Integer> subset0 = new ArrayList<Integer>();
     		subset0.add(set.get(0));
     		
@@ -69,75 +70,32 @@ public class RecursionDP {
     		preList.add(subset0);//added {1}
     		
     		return preList;
-    		
-    /*
-     * {1, 3} = {}, {1}, {3}, {1, 3}		
-     */
-    	}else if(set.size() == 2) {
-    		
-    	
-    		/*
-    		 * Creating {1}, adding element from index 0
-    		 */
-    		ArrayList<Integer> subset0 = new ArrayList<Integer>();
-    		subset0.add(set.get(0));
-    		
-    		
-    		/*
-    		 * Creating {3}  adding element from index 1
-    		 */
-    		ArrayList<Integer> subset1 = new ArrayList<Integer>();
-    		subset1.add(set.get(1));
-    		
-    		/*
-    		 * creating {1, 3}	
-    		 */
-    		ArrayList<Integer> subset2 = new ArrayList<Integer>();
-    		subset2.add(set.get(0));
-    		subset2.add(set.get(1));
-    		
-    		/*
-    		 * Populating final list
-    		 */
-    		preList.add(new ArrayList<Integer>());//adding empty set {}
-    		preList.add(subset0);//added {1}
-    		preList.add(subset1);//added {3}
-    		preList.add(subset2);//added {1, 3}
-    		
-    		return preList;
-    		
     	}
-    	
     	/*
     	 * Base case ends
     	 */
-    	
-    	  int last = set.remove(set.size() -1);
-    	  preList =  getSubsets(set, preList);
+    	//{1,3}
+    	//if input size is two, we will pass 1 here, so first we will calculate subsets of first element
+    	  preList =  getSubsets(set, preList, index - 1);//this will calculate subset of {1}
     	  
     	  
     	  ArrayList<ArrayList<Integer>> finalList = new ArrayList<ArrayList<Integer>>();
     	  
     	  /*
-    	   * adding all subsets from (1, 3}
+    	   * adding all subsets from (1}
     	   */
     	  finalList.addAll(preList);
     	  
-    	  //Now add 3rd element to each subset of {1,3}
+    	  //Now add 2nd element (3) to each subset of {1}
     	  for(ArrayList<Integer> subset: preList) {
     		  ArrayList<Integer> elementSet = new ArrayList<Integer>();
-    		  elementSet.addAll(subset);
+    		  elementSet.addAll(subset);//do not modify subset !!!! it will modify original subset element in finalList
     		  //adding 3rd element to each subset of {1,3}
-    		  elementSet.add(last);
+    		  elementSet.add(set.get(index));
     		  finalList.add(elementSet);
-    	  }
-    
-    	 
-    	  set.add(last);	
+    	  }   	 
 	  return finalList;
 	}
-	
-	
 	
 	
 	void printList (ArrayList<ArrayList<Integer>>  set){
@@ -177,6 +135,64 @@ public class RecursionDP {
 		
 	
 	}
+	
+
+/*
+ * Calculate permutations of string with unique chars
+ * P(a1a2a3) = {a1 + P(a2a3)} + {a2 + P(a1a3)}+ { a3 + P(a1a2)
+ * Iterate through char by char, construct substring by removing char at ith position, calculate P of that substring and then append ith char with
+ * all permutations
+ */
+
+public ArrayList<String> stringPermutations(String input){//abc
+  
+   
+   ArrayList<String> preList = new ArrayList<String>();
+   
+   if(input.equals("")){
+    preList.add("");
+    return preList;
+   }
+  
+  if(input.length() == 1){//size is one   
+    preList.add(input);
+    return preList;
+  
+  }
+  
+  if(input.length() == 2){//ab  
+   preList.add(input.substring(0,1) + input.substring(1,2) );//ab
+   preList.add( input.substring(1,2) + input.substring(0,1) );  //ba
+   return preList;
+  
+  }
+  
+  //If length does not 0 or 1 or 2, call below method
+  return permutations(input);
+ 
+  }
+  
+public ArrayList<String> permutations(String input){
+  
+  ArrayList<String> finalList = new ArrayList<String>();
+  
+    
+  for(int i=0; i<input.length(); i++){
+  
+    String single = input.substring(i, i+1);//get "single char" at ith
+    String remainder = input.substring(0, i) + input.substring(i + 1);//get remainder string. Meaning chars before "single char" and after "single char"
+  
+     ArrayList<String> list =  stringPermutations(remainder);
+  
+     for(String str: list){
+        finalList.add(single + str);
+     }
+  }
+  
+ 
+  return finalList;
+ 
+ }
 	
 	
 	
