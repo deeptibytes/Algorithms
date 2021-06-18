@@ -1,7 +1,11 @@
 package linkedlist;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 
 public class LinkedListProbs {
@@ -710,7 +714,7 @@ public class LinkedListProbs {
 			}			
 		}
 		
-		if (fast == null || fast.next == null) {//means no loop
+		if (fast == null || fast.next == null) {//means no loop. This is imp. If loop runs without breaing, means no loop so check here
 			return null;
 		}
 		
@@ -726,6 +730,19 @@ public class LinkedListProbs {
 		
 	}
 	
+	
+	class ListNode {
+
+	
+	public int val;
+	public ListNode next;
+	private ListNode random;
+	
+	public ListNode(int val) {
+		
+		this.val = val;
+	}
+	}
 	 public ListNode removeDups(ListNode head){
 	//5 5 6 2 6 2
 		ListNode dummy = new ListNode(-1);
@@ -756,6 +773,11 @@ public class LinkedListProbs {
 	}
 	
 	
+	private void print(ListNode head) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public ListNode removeDupsInPlace(ListNode head){
 	 
 	 print(head);
@@ -839,17 +861,17 @@ public class LinkedListProbs {
 	   return true;
 }
 	
-	void sortList() 
+	/*void sortList() 
     { 
        // initialise count of 0 1 and 2 as 0 
        int count[] = {0, 0, 0};  
          
        Node ptr = head; 
          
-       /* count total number of '0', '1' and '2' 
+        count total number of '0', '1' and '2' 
         * count[0] will store total number of '0's 
         * count[1] will store total number of '1's 
-        * count[2] will store total number of '2's  */
+        * count[2] will store total number of '2's  
        while (ptr != null)  
        { 
             count[ptr.data]++; 
@@ -859,11 +881,11 @@ public class LinkedListProbs {
        int i = 0; 
        ptr = head; 
   
-       /* Let say count[0] = n1, count[1] = n2 and count[2] = n3 
+        Let say count[0] = n1, count[1] = n2 and count[2] = n3 
         * now start traversing list from head node, 
         * 1) fill the list with 0, till n1 > 0 
         * 2) fill the list with 1, till n2 > 0 
-        * 3) fill the list with 2, till n3 > 0  */
+        * 3) fill the list with 2, till n3 > 0  
         while (ptr != null)  
         { 
             if (count[i] == 0) 
@@ -876,7 +898,7 @@ public class LinkedListProbs {
             } 
          } 
     } 
-    
+    */
     
     ///Efficiently merge K sorted linked lists
     
@@ -905,7 +927,7 @@ public class LinkedListProbs {
     //Create PQ  (min Heap)  
     Queue<ListNode> pQ = new PriorityQueue<ListNode>(comp);
    
-    //Populate pQ with all elements of passed lists
+    //Populate pQ with all elements (head) of passed lists
 
     for(ListNode node: lists){
             pQ.offer(node);
@@ -1070,5 +1092,6 @@ public class LinkedListProbs {
 			
 		
 	}
-
-}
+	
+	
+	}

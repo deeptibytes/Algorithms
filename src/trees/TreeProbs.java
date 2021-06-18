@@ -1,7 +1,9 @@
-cpackage trees;
+package trees;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 
 
@@ -15,6 +17,19 @@ class Node{
 		this.data = data;
 	}		
 }
+
+
+class TreeNode{
+	
+	int data;
+	TreeNode left;
+	TreeNode right;
+	
+	public TreeNode(int data) {
+		this.data = data;
+	}		
+}
+
 
 
 public class TreeProbs {
@@ -37,7 +52,7 @@ public class TreeProbs {
 		
 		ArrayList<LinkedList<Node>> result = new ArrayList<LinkedList<Node>>();
 		getListAtDepth(root, result, 0);
-		return result
+		return result;
 		
 		
 	}
@@ -524,11 +539,11 @@ public boolean checkSumTree(Node node){
   if(node.left == null && node.right == null) return true;
   
   else if(node.left !=null && node.right !=null){
-     isSum = (node.val ==node.left.val + node.right.val) ? true: false;
+     isSum = (node.data ==node.left.data + node.right.data) ? true: false;
   }else if(node.left != null) {
-       isSum = (node.val ==node.left.val) ? true: false; 
+       isSum = (node.data ==node.left.data) ? true: false; 
   }else{  
-      isSum = (node.val ==node.right.val) ? true: false; 
+      isSum = (node.data ==node.right.data) ? true: false; 
   }
   
   return isSum && checkSumTree(node.left) && checkSumTree(node.right);
@@ -572,7 +587,7 @@ public boolean checkSumTree(Node node){
             return sum == 0;//this is not sum =0!!
             
             boolean isFountLeft = hasPathSum(node.left, sum - node.data);//while recursing, passing sum - node.data
-            booelan isFoundRight = hasPathSum(node.right, sum - node.data);
+            boolean isFoundRight = hasPathSum(node.right, sum - node.data);
             
             //if any of the boolean is true that means path is found.
             
@@ -591,7 +606,7 @@ public String serialize(TreeNode root, String str){//it will convert BT into Str
  //If we are returning any thing in base case, no need to use else because after return no code is executed.
  //But if not returning, then else should be used
 
-	 str = str + root.val + ",";
+	 str = str + root.data + ",";
 	 str = serialize(root.left, str);//imp to return here. if method is returning anything, recursive call should also return something
 	 //when we do oreorder traversal, retrun type is void so we dont need return anything in recursive call. 
 	 //But here method return type is String so we should return
@@ -664,6 +679,21 @@ public List<LinkedList<TreeNode>> zigZakTraversal(TreeNode root){
 	zigZakTraversal(root, finalList, 0, height);	
 	return finalList;
 }
+
+public int getMaxTreeHeight(TreeNode root) {///  //O(N)  same will be maxDepth. Same will be any Node height
+	
+		if(root ==null) {
+			return 0; //we can also return -1, result will be same;
+		}
+		int LHeight = getMaxTreeHeight(root.left);
+		int RHeight = getMaxTreeHeight(root.right);
+		
+		int maxHeight = (LHeight > RHeight)? LHeight: RHeight;
+		return maxHeight + 1 ;//+1 is done to add root
+		
+		
+	}
+	
 
 public void zigZakTraversal(TreeNode root, List<LinkedList<TreeNode>> finalList, int level, int height){
 

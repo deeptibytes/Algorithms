@@ -1,8 +1,12 @@
 package sortingSearching;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 public class Sorting {
 
@@ -471,7 +475,7 @@ private int searchElement2(int[][] matrix, int key, int row, int col) {
 		  //compare with next element
 		  if(arr[i]  > arr[i+1]) {  //to be a valley , element must be less than next
 			  int j = i +1;
-			  while(arr[j] < arr[i] && j < arr.length) {
+			  while(arr[j] > arr[i + 1] && j < arr.length) {//isn't should be i + 1
 				  j++;				  
 			  }
 			  
@@ -503,26 +507,26 @@ private int searchElement2(int[][] matrix, int key, int row, int col) {
   int countDistinct(int[] arr, int target){
   
     //1. Arrays.sort(arr);
-    //2. Now remove duplicates
+    //2. Now remove duplicates ///why cant we create treeset. This will do #1 and #2
     int count = 0;
     
     //3.
      for(int i=0; i < arr.length ; i++){
-       int complimenet = Math.abs(arr[i] + target);
-       int index = binarySearch(arr, i+1, arr.length -1, complement);
+       int complement = Math.abs(arr[i] + target);
+       int index = binarySearch2(arr, i+1, arr.length -1, complement);
        if(index != -1) count++;       
      }
       return count;
   }    
     
-  }  
-  int binarySearch(int[] , int low, int high, int key){
+   
+  int binarySearch2(int arr[] , int low, int high, int key){
   
     if (low> high) return -1;   
     int mid = (low + high)/2;   
     if(arr[mid] == key) return arr[mid];   
-    if(arr[mid] > key) return binarySearch(arr, 0, mid-1, key);   
-    return binarySearch(arr, mid + 1, high, key);
+    if(arr[mid] > key) return binarySearch2(arr, 0, mid-1, key);   
+    return binarySearch2(arr, mid + 1, high, key);
   
   }
 

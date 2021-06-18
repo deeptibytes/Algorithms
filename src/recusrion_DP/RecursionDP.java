@@ -216,6 +216,10 @@ public ArrayList<String> permutations(String input){
 		
 		System.out.println("Multiplication is "+obj.recMultiply(9, 8));
 		
+		final String name = "baeldung";
+        //name = "bael...";
+
+		
 		
 		
 		

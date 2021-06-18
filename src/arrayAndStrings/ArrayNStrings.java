@@ -1,8 +1,14 @@
 package arrayAndStrings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 public class ArrayNStrings {
@@ -42,7 +48,7 @@ public class ArrayNStrings {
 	HashMap<Character, Integer>  map = new HashMap<>();
 	for(int i=0 ; i <= s.length() -1; i++) {
 		if(map.containsKey(s.charAt(i))) return false;
-		map.put(s.charAt(i), 1);
+		map.put(s.charAt(i), 1);//should it be i??
 	}
 	
 	return true;
@@ -208,7 +214,7 @@ public boolean palindromePermutation( String str1){  //T O(N) S O(N)
 	 }
 	 
 	 for(char c: map.keySet()){
-	   if(! isEven(map.get(c))) oddCounter++;
+	  // if(! isEven(map.get(c))) oddCounter++;
 	 }
 	
 	 
@@ -304,9 +310,9 @@ public boolean palindromePermutation( String str1){  //T O(N) S O(N)
 	  
 	  StringBuilder sb = new StringBuilder();
 	  
-	  int i = 0;
+	  int i = 0;int j;
 	  
-	  for(int j=i+1 ; j< str.length(); j++){
+	  for( j=i+1 ; j< str.length(); j++){
 	  
 	   if(str.charAt(i) != str.charAt(j)) {
 	       sb.append(str.charAt(i)).append(j -i);//
@@ -352,9 +358,9 @@ public boolean palindromePermutation( String str1){  //T O(N) S O(N)
 	      }
 	    }
 	    
-	     for(int i=0; i < col ; i++){
-	      if(colArr[i] ==1){
-	        setColZero(arr, i);
+	     for(int j=0; j < col ; j++){//it should be j
+	      if(colArr[j] ==1){
+	        setColZero(arr, j);
 	      }
 	    }
 	   
@@ -420,7 +426,7 @@ public int findKthLargest(int[] arr, int k){//Using MinHeap
 	  return pQ.peek();	
 }
 
-public int findKthLargest(int[] arr, int k){//Using MaxHeap
+public int findKthLargest1(int[] arr, int k){//Using MaxHeap
 	
 	Comparator<Integer> comp = new Comparator<Integer>()//if defining comparatoer type as integer, compare method should have params of Integer type
 	{
@@ -715,7 +721,17 @@ public int longestsubstring(String str){ ///O(N square)
 	return list;
 	
 }
+/*
+ * In a string s of lowercase letters, these letters form consecutive groups of the same character.
 
+For example, a string like s = "abbxxxxzyy" has the groups "a", "bb", "xxxx", "z", and "yy".
+
+A group is identified by an interval [start, end], where start and end denote the start and end indices (inclusive) of the group. In the above example, "xxxx" has the interval [3,6].
+
+A group is considered large if it has 3 or more characters.
+
+Return the intervals of every large group sorted in increasing order by start index.
+ */
 ////Positions of Large Groups
 
 
@@ -733,7 +749,7 @@ public int longestsubstring(String str){ ///O(N square)
 	for( j = i+1; j < str.length(); j++){
 	
 	  if(  str.charAt(i) != str.charAt(j) ){
-	    len = (j-1) -i + 1;
+	    len = (j-1) -i + 1;//this is equivalent to j -i  !!!
 	    if(len >= 3){
 	     list = new ArrayList<Integer>();
 	     list.add(i); list.add(j-1);
@@ -744,7 +760,7 @@ public int longestsubstring(String str){ ///O(N square)
         
   }
     
-     len = (j-1) -i + 1;
+     len = (j-1) -i + 1; ///this is equivalent to j -i  !!!
      if(len >=3){
        list = new ArrayList<Integer>();
 	     list.add(i); list.add(j-1);
@@ -755,9 +771,118 @@ public int longestsubstring(String str){ ///O(N square)
 	
 }
         
-		 
+/*
+ * Partition Labels
+ * A string S of lowercase English letters is given. We want to partition this string into as many parts
+ *  as possible so that each letter appears in at most one part, and return a list of integers representing 
+ *  the size of these parts.
+
+
+ */
+ 
+ public List<Integer> partitionLabels(String S) {
+        
+        
+       Map<Character, Integer> map = new HashMap<Character, Integer>();
+        List<Integer> list = new ArrayList<Integer>();
+        
+      //create map holding last index of char in S  
+      for(int i = 0; i < S.length() ; i++){
+          
+          map.put(S.charAt(i), i);
+                    
+      }
+        
+        
+        
+         int i = 0;
+         
+     while( i < S.length() ){//window loop
+       
+          int j = i;
+          int  window = -1;
+          int currtLast = -1;
+        
+         while( j < S.length() ){
+             
+           
+             currtLast = map.get(S.charAt(j));
+           
+             if(window == -1 ||//first iteration
+                            (window != -1 && currtLast >  window) ) //subsequent iteration{
+                 window = currtLast;                   
+                 
+             }              
+             
+            if(window == j) {//if j reaches window
+                 
+                 list.add(window - i + 1);
+                 i = window + 1;
+                 break;
+             }
+                
+             j++;
+        }
+        
+    
+        
+        return list;
+  }
+	 
 	 
 	
+	
+	        
+ /* Remove duplicates in place
+  */       
+public int removeDuplicates(int[] nums) {
+    if (nums.length == 0) return 0;
+    int i = 0;
+    for (int j = 1; j < nums.length; j++) {
+        if (nums[j] != nums[i]) {
+            i++;
+            nums[i] = nums[j];
+        }
+    }
+    return i + 1;
+}
+
+
+
+
+
+
+
+/*
+ *Given a non-empty array of decimal digits representing a non-negative integer, increment one to the integer.
+
+The digits are stored such that the most significant digit is at the head of the list, and each element in the array contains a single digit.
+
+
+ */
+ 
+ public int[] plusOne(int[] digits) {
+    int n = digits.length;
+
+    // move along the input array starting from the end
+    for (int idx = n - 1; idx >= 0; --idx) {
+      // set all the nines at the end of array to zeros
+      if (digits[idx] == 9) {
+        digits[idx] = 0;
+      }
+      // here we have the rightmost not-nine
+      else {
+        // increase this rightmost not-nine by 1
+        digits[idx]++;
+        // and the job is done
+        return digits;
+      }
+    }
+    // we're here because all the digits are nines
+    digits = new int[n + 1];
+    digits[0] = 1;
+    return digits;
+  }
 
 			public static void main(String[] args) {
 				// TODO Auto-generated method stub
