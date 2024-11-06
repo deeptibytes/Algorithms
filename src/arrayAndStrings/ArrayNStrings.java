@@ -16,6 +16,11 @@ public class ArrayNStrings {
 
  /*
   * One edit away
+  There are 3 types of edits can be performed on strings, inser/remove/replace a char. Given two strings,, write a function to check if they are one edit away
+  pale, ple >> true
+  pales, pale >> true
+  pale, bale >> true
+  pale, bae >> false
   */
  
  private boolean isOneEditAway( String s1, String s2) {
@@ -42,7 +47,7 @@ public class ArrayNStrings {
 	 return true;	 
  }
  
- private boolean oneDeletionAway(String s1, String s2) {  //PALE", "BALaA"
+ private boolean oneDeletionAway(String s1, String s2) {  //PALE", "PAL"
 	 
 	 int i = 0; int j = 0;
 	 boolean diffFound = false;
@@ -69,7 +74,10 @@ public class ArrayNStrings {
 	 return true;
  }
  
- 
+ /**
+  String compression: compress string using the counts of repeated chars.
+  Input: aabcccccaaa >> a2b1c5a3
+ */
  private String countConsecutive(String s) {
 	 
 	
@@ -123,7 +131,10 @@ public class ArrayNStrings {
 	   return (sb.length() == str.length()) ? str : sb.toString();
 	
 	}
-	
+
+	/**
+         Write an algo such that if an element in an M*N matrix is zero, its entire row and column is set to zero
+       */ 
 	public int[][] setZeroMatrix(int arr[][]){
 	
 	   int row = arr.length;
