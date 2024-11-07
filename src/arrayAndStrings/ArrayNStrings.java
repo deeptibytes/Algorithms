@@ -205,13 +205,13 @@ public class ArrayNStrings {
 		 
 public int findKthLargest(int[] arr, int k){//Using MinHeap
 	
-	    
+	//arr = { 3, 1, 5, 2, 8, 9} answer should be 3 if K is 4    
         
        //Create minHeap of k elemenst
-	Queue<Integer> pQ = new PriorityQueue<Integer>();//default is minHeap
+	Queue<Integer> pQ = new PriorityQueue<Integer>();//default is minHeap   
 	
 	int i = 0;
-	//put two elements in heap
+	//adding {3, 1, 5, 2} in the PQ, peek element will be 1
 	while(i < k){
 	  pQ.offer(arr[i++]);	
 	}
@@ -219,11 +219,12 @@ public int findKthLargest(int[] arr, int k){//Using MinHeap
 	for(i = k; i < arr.length ; i++){
 	   
 	   if(arr[i] > pQ.peek() ){//incoming number is less than heap root, no need to add that because we are finding largest.
-	     pQ.poll();
+	     pQ.poll();// will remove 1 in first iteration and add 8, will remove 2 in second iteration and add 9
 	     pQ.add(arr[i] );
 	   }
 	
 	}
+	// Now the PQ is {3, 5, 8, 9} peek element will be 3
 	  return pQ.peek();	
 }
 
